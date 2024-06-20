@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Vectores</title>
-    <link rel="stylesheet" href="/public/CSS/magnitudes-style.css">
+    <link rel="stylesheet" href="/public/CSS/componentes-style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -26,40 +26,24 @@
     <div class="Maincontent">
         <div class="Contanier MitadUno">
             <form id="vectorForm">
-                <div class="row">
-                    <div class="MagnitudesLbl">
-                        <label for="magnitude1" class="labelReferencia magni"><b>Magnitudes</b></label>
-                    </div>
-                    <div class="AngulosLbl">
-                        <label for="angle1_1" class="labelReferencia angul"><b>Ángulos</b></label>
-                    </div>
+                <div class="Componentes I">
+                    <label for="componenteI"><b>I</b></label>
+                    <input type="number" id="componenteI_1" required>
+                    <input type="number" id="componenteI_2" required>
                 </div>
-                <div class="row">
-                    <div class="inputGroup">
-                        <label for="magnitude1"><h2>A</h2></label>
-                        <input type="number" id="magnitude1" class="inputsVectores" required>
-                    </div>
-                    <div class="inputGroup">
-                        <input type="number" id="angle1_1" class="inputsVectores" required>
-                        <input type="number" id="angle1_2" class="inputsVectores" required>
-                    </div>
+                <div class="Componentes J">
+                    <label for="componenteJ"><b>J</b></label>
+                    <input type="number" id="componenteJ_1" required>
+                    <input type="number" id="componenteJ_2" required>
                 </div>
-                <br><br><br>
-                <div class="row">
-                    <div class="inputGroup">
-                        <label for="magnitude2"><h2>B</h2></label>
-                        <input type="number" id="magnitude2" class="inputsVectores" required>
-                    </div>
-                    <div class="inputGroup">
-                        <input type="number" id="angle2_1" class="inputsVectores" required>
-                        <input type="number" id="angle2_2" class="inputsVectores" required>
-                    </div>
+                <div class="Componentes K">
+                    <label for="componenteK"><b>K</b></label>
+                    <input type="number" id="componenteK_1" required>
+                    <input type="number" id="componenteK_2" required>
                 </div>
                 <button type="button" onclick="calcular()">Calcular</button>
             </form>
         </div>
-        
-        
         <div class="Contanier MitadDos">
             <h2>Gráfica del Vector</h2>
             <div id="grafico"></div>
@@ -70,24 +54,16 @@
     <script>
         function calcular() {
             // Obtener valores de los inputs
-            const magnitude1 = parseFloat(document.getElementById('magnitude1').value);
-            const angle1_1 = parseFloat(document.getElementById('angle1_1').value) * Math.PI / 180;
-            const angle1_2 = parseFloat(document.getElementById('angle1_2').value) * Math.PI / 180;
-            const magnitude2 = parseFloat(document.getElementById('magnitude2').value);
-            const angle2_1 = parseFloat(document.getElementById('angle2_1').value) * Math.PI / 180;
-            const angle2_2 = parseFloat(document.getElementById('angle2_2').value) * Math.PI / 180;
+            const i1 = parseFloat(document.getElementById('componenteI_1').value);
+            const i2 = parseFloat(document.getElementById('componenteI_2').value);
+            const j1 = parseFloat(document.getElementById('componenteJ_1').value);
+            const j2 = parseFloat(document.getElementById('componenteJ_2').value);
+            const k1 = parseFloat(document.getElementById('componenteK_1').value);
+            const k2 = parseFloat(document.getElementById('componenteK_2').value);
 
-            // Convertir magnitudes y ángulos a componentes cartesianas
-            const vector1 = {
-                x: magnitude1 * Math.sin(angle1_2) * Math.cos(angle1_1),
-                y: magnitude1 * Math.sin(angle1_2) * Math.sin(angle1_1),
-                z: magnitude1 * Math.cos(angle1_2)
-            };
-            const vector2 = {
-                x: magnitude2 * Math.sin(angle2_2) * Math.cos(angle2_1),
-                y: magnitude2 * Math.sin(angle2_2) * Math.sin(angle2_1),
-                z: magnitude2 * Math.cos(angle2_2)
-            };
+            // Crear vectores a partir de componentes
+            const vector1 = { x: i1, y: j1, z: k1 };
+            const vector2 = { x: i2, y: j2, z: k2 };
 
             // Sumar los vectores
             const vectorResultado = {
@@ -105,36 +81,55 @@
 
             // Mostrar resultado
             document.getElementById('resultado').innerHTML = `
+                <b>Componentes:</b><br>
+                I: ${vectorResultado.x.toFixed(2)}<br>
+                J: ${vectorResultado.y.toFixed(2)}<br>
+                K: ${vectorResultado.z.toFixed(2)}<br><br>
+                <b>Magnitud y Ángulos:</b><br>
                 Magnitud: ${magnitudResultado.toFixed(2)}<br>
                 Ángulo 1: ${anguloResultado1.toFixed(2)}°<br>
                 Ángulo 2: ${anguloResultado2.toFixed(2)}°
             `;
 
-            // Graficar el vector
-            graficarVector(vectorResultado);
+            // Graficar los vectores
+            graficarVectores(vector1, vector2, vectorResultado);
         }
 
-        function graficarVector(vector) {
+        function graficarVectores(vector1, vector2, vectorResultado) {
             // Configurar escena, cámara y renderizador
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(75, document.getElementById('grafico').clientWidth / document.getElementById('grafico').clientHeight, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(document.getElementById('grafico').clientWidth, document.getElementById('grafico').clientHeight);
-            renderer.setClearColor(0xffffff);
+            renderer.setClearColor(0xffffff);  // Cambiar color de fondo a blanco
             document.getElementById('grafico').innerHTML = '';
             document.getElementById('grafico').appendChild(renderer.domElement);
 
             // Crear controles de órbita
             const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-            // Crear geometría de la flecha del vector
-            const arrowHelper = new THREE.ArrowHelper(
-                new THREE.Vector3(vector.x, vector.y, vector.z).normalize(),
-                new THREE.Vector3(0, 0, 0),
-                Math.sqrt(vector.x ** 2 + vector.y ** 2 + vector.z ** 2),
-                0xff0000
-            );
-            scene.add(arrowHelper);
+            // Función para añadir un vector con etiqueta
+            function addVector(vector, color, label) {
+                const arrowHelper = new THREE.ArrowHelper(
+                    new THREE.Vector3(vector.x, vector.y, vector.z).normalize(),
+                    new THREE.Vector3(0, 0, 0),
+                    Math.sqrt(vector.x ** 2 + vector.y ** 2 + vector.z ** 2),
+                    color
+                );
+                scene.add(arrowHelper);
+
+                const loader = new THREE.FontLoader();
+                loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
+                    const textMesh = createTextLabel(label, font, color);
+                    textMesh.position.set(vector.x, vector.y, vector.z);
+                    scene.add(textMesh);
+                });
+            }
+
+            // Añadir vectores con etiquetas
+            addVector(vector1, 0x0000ff, 'A');
+            addVector(vector2, 0x00ff00, 'B');
+            addVector(vectorResultado, 0xff0000, 'Resultado');
 
             // Añadir ejes para referencia
             const axesHelper = new THREE.AxesHelper(5);
